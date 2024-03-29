@@ -1,0 +1,282 @@
+.glass{
+    background-color: rgba(34, 34, 34, 0.8);
+    backdrop-filter: blur(0px);
+    border:1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+
+    color: white;
+}
+*{
+    padding: 0%;
+    margin: 0%;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 1rem;
+}
+body{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-image: url('milad-fakurian-CN2FEPXERRI-unsplash.jpg');
+    background-size: cover;
+    flex-direction: row;
+}
+.files{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 50%;
+    min-height: 100vh;
+    background-color: rgba(0, 0, 0, 0.897);
+    border: none;
+    box-shadow: none;
+}
+
+.files form{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+
+.files input{
+    width: 200px;
+    height: 60px;
+}
+
+.files input[type='file']{
+    display: none;
+}
+
+.files label{
+    width: 110px;
+    height: 60px;
+    background-color: rgba(34, 34, 34, 0.308);
+    color: white;
+    padding: 0.5rem;
+    font-family: sans-serif;
+    border-radius: 0.3rem;
+    cursor: pointer;
+    margin: 0.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.flex{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+}
+
+
+.flex div{
+    width: 70px;
+    height: 60px;
+    padding: 15px;
+    color: white;
+    margin: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+	border-radius:0px;
+}
+.name{
+    width: 200px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin: 0.5rem;
+    overflow: hidden;
+    text-align: center;
+}
+
+
+.link{
+    width: 200px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin: 1rem;
+    overflow: hidden;
+    flex-direction: column;
+    padding: 5px;
+transition:0.3s;
+}
+.link:hover{
+    width: 40vw;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin: 1rem;
+    overflow: hidden;
+    flex-direction: column;
+    padding: 5px;
+}
+
+
+.link a{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 2px;
+    padding: 2px;
+    border-radius: 1px;
+    text-decoration: none;
+    
+}
+.Prog{
+    width: 200px;
+    height: 30px;
+    margin: 10px;
+    border-radius:0px;
+}
+
+
+
+
+.flex{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    margin: 10px;
+}
+.flex .pers{
+    margin: 0%;
+    height: 10px;
+    padding: 3%;
+    font-size: 0.9rem;
+    background-color: rgba(182, 182, 182, 0);
+    width: 30px;
+}
+
+.flex .Prog{
+    width: 130px;
+    margin: 0%;
+    width: 160px;
+    border-radius:0px;
+}
+progress{
+    width: 200px;
+}
+#progressBar{
+	    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 200px;
+    margin:5px;
+    margin-top:-7px;
+    margin-bottom:-7px;
+    height:20px;
+    border-radius:0px;
+    
+}
+ul{
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+}
+.persent{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+	position: absolute;
+}
+
+.scroll{
+    padding: 20px;
+    overflow-y:scroll;
+    height: 100vh;
+    align-items: center;
+    justify-content: baseline;
+
+}
+.click{
+    position: fixed;
+    width: 50px;
+    height: 50px;
+    top: 1%;
+    left: 1%;
+    z-index: 99;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    font-size: 25px;
+    text-decoration: none;
+    border-radius: 50%;
+    background-color: black;
+    display: none;
+}
+.refresh{
+    position: fixed;
+    width: 50px;
+    height: 50px;
+    top: 1%;
+    left: 20%;
+    z-index: 99;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    font-size: 25px;
+    text-decoration: none;
+    border-radius: 50%;
+    background-color: black;
+
+}
+.refresh{
+    display: none;
+}
+.link{
+    width: 40vw;
+}
+@media screen and (max-width: 600px) {
+    body {
+        flex-direction: column;
+    }
+
+    .files {
+        width: 100%;
+    }
+    .link{
+        width: 90vw;
+    }
+    .click{
+        display: flex;
+    }
+    .refresh{
+        display: flex;
+    }
+
+    
+}
+
+
+
+.qrcode{
+    margin: 50px;
+}
+.qrcode img{
+    width: 150px;
+    height: 150px;
+}
+
+.scroll,.files{
+    border: 1px white solid;
+}

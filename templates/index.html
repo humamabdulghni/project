@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
+    <script src="{{ url_for('static', filename='JsBarcode.all.min.js') }}"></script>
+    <title>File Upload Server</title>
+</head>
+<body>
+    <a href="#uploads" class="click glass">⬇</a>
+    <a href="#uploads" class="refresh glass">↻</a>
+    <div class="files glass" id="uploads">
+        <div >
+            <form id="uploadForm" action="http://192.168.0.102:1000/upload" method="post" enctype="multipart/form-data">
+                <input type="file" name="file" accept="" id="file" multiple="">
+                <div class="flex">
+                    <label for="file" class="glass">Select file</label>
+                    <div class="FileSize glass">size</div>
+                </div>
+                <div class="name glass">Name</div>
+            <div class="flex">
+            <div class="persent">0%
+        </div>
+        <progress id="progressBar" value="0" max="100"></progress></div>       
+        <input type="submit" value="Upload File" class="glass">   
+    </form>
+        <br>
+        <form action="/clean" method="get">
+            <input type="submit" value="Clean Files" class="glass">
+        </form>
+        </div>
+        <div class="barCode">
+            <div class="qrcode glass" id="qrcode" style="width: 100px; height: 100px; display: flex;justify-content: center;align-items: center;
+            "></div>
+        </div>
+    </div>
+    <div class="files scroll" id="files">
+        {% if files %}
+            <ul>
+                {% for file in files %}
+                    <li class="link glass">{{ file }} <a class="glass" href="{{ url_for('download_file', filename=file) }}">Download</a></li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+
+<script>
+    document.getElementById('uploadForm').addEventListener('submit', function(event) {
+        let fileInput = document.getElementById('file');
+        let progressBar = document.getElementById('progressBar');
+
+        // Prevent the default form submission
+        event.preventDefault();
+
+        // Get the files selected by the user
+        let files = fileInput.files;
+
+        // Create a FormData object to send the files
+        let formData = new FormData();
+
+        // Add each file to the FormData object
+        for (let i = 0; i < files.length; i++) {
+            let file = files[i];
+            formData.append('file', file);
+        }
+
+        // Create a new XMLHttpRequest object
+        let xhr = new XMLHttpRequest();
+
+        // Set up the progress event listener
+        xhr.upload.addEventListener('progress', function(event) {
+            if (event.lengthComputable) {
+                // Calculate the percentage of upload completion
+                let percentComplete = (event.loaded / event.total) * 100;
+                // Update the progress bar value
+                progressBar.value = percentComplete;
+		document.querySelector('.persent').innerHTML=`${Math.floor(progressBar.value)}%`;
+                if (percentComplete==100){
+                    window.location.reload()
+                }
+            }
+        });
+
+        // Set up the load event listener
+        xhr.addEventListener('load', function() {
+            // Reset the progress bar value after the upload is complete
+            progressBar.value = 0;
+            if (progressBar.value==100){
+                window.location.reload()
+            }
+        });
+
+        // Open the request
+        xhr.open('POST', '/upload');
+
+        // Send the FormData object
+        xhr.send(formData);
+    });
+</script>
+<script>
+    let fileInput=document.getElementById('file')
+    fileInput.addEventListener('change',e=>{
+        let name=fileInput.files[0].name
+        document.querySelector('.name').innerHTML=name
+        let size=fileInput.files[0].size
+        function getSize(size){
+            if(size>1024 && size<1048576){
+                size=(size/1024).toFixed(1)+'KB'
+            }
+            else if(size>1048576 && size<1073741824){
+                size=(size/1024/1024).toFixed(1)+'MB'
+            }
+            else{
+                size=(size/1024/1024/1024).toFixed(1)+'GB'
+            }
+            return size
+        }
+        document.querySelector('.FileSize').innerHTML=getSize(size)
+    })
+    
+</script>
+<script>
+    let fileList=document.querySelector('.scroll')
+    if(fileList.innerHTML=='\n        \n    '){
+        let elm=document.createElement('div')
+        elm.className=='link glass'
+        elm.innerHTML='Your files will appear here'
+        elm.style.color='white'
+        fileList.appendChild(elm)
+    }
+</script>
+<script>
+let qrCodeDiv = document.getElementById('qrcode');
+let qrCodeData = `http://${window.location.host}` // Example URL for the QR code
+let qrCode = qrcode(0, 'M');
+qrCode.addData(qrCodeData);
+qrCode.make();
+
+// Render the QR code in the specified div
+qrCodeDiv.innerHTML = qrCode.createImgTag();
+</script>
+<script>
+    let click=document.querySelector('.click')
+    click.addEventListener('click',e=>{
+        if(click.href==`http://${window.location.host}/#files`){
+            click.href=`http://${window.location.host}/#uploads`
+            click.innerHTML='⬇'
+        }
+        else{
+            click.href=`http://${window.location.host}/#files`
+            click.innerHTML='⬆'
+        }
+    })
+    let refresh=document.querySelector('.refresh')
+    refresh.addEventListener('click',e=>{
+        window.location.reload()
+    })
+</script>
+</body>
+</html>
