@@ -1,54 +1,49 @@
-name: CI
+name: Build APK
+
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-      # used to cache dependencies with a timeout
-      - name: Get Date
-        id: get-date
-        run: |
-          echo "::set-output name=date::$(/bin/date -u "+%Y%m%d")"
-        shell: bash
-
-      - name: Cache Buildozer global directory
-        uses: actions/cache@v2
-        with:
-          path: .buildozer_global
-          key: buildozer-global-${{ hashFiles('buildozer.spec') }} # Replace with your path
-
-      - uses: actions/cache@v2
-        with:
-          path: .buildozer
-          key: ${{ runner.os }}-${{ steps.get-date.outputs.date }}-${{ hashFiles('buildozer.spec') }}
-
-      # Add setup-java action to set up the JDK
       - name: Set up JDK
         uses: actions/setup-java@v2
         with:
           java-version: '11'
 
-      # Add setup-android-sdk action to set up the Android SDK
-      - name: Set up Android SDK
-        uses: android/setup-android-sdk@v2
-        with:
-          components: 'platform-tools,build-tools,android-30' # Adjust the components as per your project requirements
+      - name: Download and extract Android SDK
+        run: |
+          wget -q https://dl.google.com/android/repository/commandlinetools-linux-7583922_latest.zip -O android-sdk-tools.zip
+          mkdir -p $HOME/android-sdk
+          unzip -q android-sdk-tools.zip -d $HOME/android-sdk
 
-      - name: Build with Buildozer
-        uses: ArtemSBulgakov/buildozer-action@v1
-        id: buildozer
-        with:
-          command: buildozer android debug
-          buildozer_version: master
+      - name: Accept licenses
+        run: yes | $HOME/android-sdk/cmdline-tools/bin/sdkmanager --licenses
 
-      - name: Upload artifacts
+      - name: Set up environment variables
+        run: |
+          echo 'export ANDROID_HOME=$HOME/android-sdk' >> $GITHUB_ENV
+          echo 'export PATH=$PATH:$HOME/android-sdk/cmdline-tools/tools/bin:$HOME/android-sdk/platform-tools' >> $GITHUB_ENV
+
+      - name: Install Buildozer
+        run: pip install buildozer
+
+      - name: Configure Buildozer
+        run: buildozer init
+
+      - name: Build APK
+        run: buildozer -v android debug
+
+      # Upload the APK as an artifact
+      - name: Upload APK
         uses: actions/upload-artifact@v2
         with:
-          name: package
-          path: ${{ steps.buildozer.outputs.filename }}
+          name: my_app
+          path: ./bin/*.apk
