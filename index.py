@@ -2,8 +2,14 @@ from flask import Flask, render_template, request, redirect, url_for, send_file
 import os
 import socket
 import webbrowser
+
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = os.path.join(os.getcwd(),'files')
+app.config['UPLOAD_FOLDER'] = os.path.join(os.getcwd(), 'files')
+
+# Ensure the 'files' folder exists
+if not os.path.exists(app.config['UPLOAD_FOLDER']):
+    os.makedirs(app.config['UPLOAD_FOLDER'])
+
 @app.route('/')
 def index():
     files = os.listdir(app.config['UPLOAD_FOLDER'])
@@ -36,7 +42,6 @@ def upload_file():
 
     return redirect(url_for('index'))
 
-
 @app.route('/clean')
 def clean_files():
     for file_name in os.listdir(app.config['UPLOAD_FOLDER']):
@@ -51,7 +56,8 @@ def clean_files():
 @app.route('/download/<filename>')
 def download_file(filename):
     return send_file(os.path.join(app.config['UPLOAD_FOLDER'], filename), as_attachment=True)
+
 def run():
     local_ip = socket.gethostbyname(socket.gethostname())
     webbrowser.open(f'http://{local_ip}:1000')
-    app.run(host=local_ip,port=1000)
+    app.run(host=local_ip, port=1000)
