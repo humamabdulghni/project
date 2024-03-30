@@ -28,6 +28,18 @@ jobs:
           path: .buildozer
           key: ${{ runner.os }}-${{ steps.get-date.outputs.date }}-${{ hashFiles('buildozer.spec') }}
 
+      # Add setup-java action to set up the JDK
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+
+      # Add setup-android-sdk action to set up the Android SDK
+      - name: Set up Android SDK
+        uses: android/setup-android-sdk@v2
+        with:
+          components: 'platform-tools,build-tools,android-30' # Adjust the components as per your project requirements
+
       - name: Build with Buildozer
         uses: ArtemSBulgakov/buildozer-action@v1
         id: buildozer
